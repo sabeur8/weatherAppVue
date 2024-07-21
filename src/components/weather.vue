@@ -28,7 +28,7 @@
 <script setup>
 import { ref } from "vue"
 import Weatherdetail from "./Weatherdetail.vue";
-
+import {weatherStore} from "./store/weatherStore.js";
 
     const city = ref('')
     const humidity = ref('')
@@ -41,24 +41,13 @@ import Weatherdetail from "./Weatherdetail.vue";
         const apiKey = "ecd160b9905d4ae007f35a7c0015e5e2"
         const apiUrl =" https://api.openweathermap.org/data/2.5/weather?&units=metric"
 
-        try{
-            const response = await fetch(apiUrl +  `&q=${city.value}` +`&appid=${apiKey}` )
-            if(!response.ok){
-                throw new Error("city not found ")
-            }
-            else{
-                const data = await response.json()
-                humidity.value = data.main.humidity
-                weather.value = data.weather[0].main
-                temp.value = data.main.temp
-                wind.value = data.wind.speed
-            }
-        }
-        catch(err){
-            console.log(err.message)
-            alert('city not found')
-        }
-        
+        weatherStore.fetchWeater(apiUrl +  `&q=${city}` +`&appid=${apiKey}`)
+
+        city.value = weatherStore.city
+        humidity.value = weatherStore.humidity
+        weather.value = weatherStore.weather
+        temp.value = weatherStore.temp
+        wind.value = weatherStore.wind
     }
     
 </script>
