@@ -1,36 +1,31 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-const weatherStore = defineStore('weatherStore', {
+export const UseWeatherStore = defineStore('weatherStore',()=> {
 
-    state : () =>({
+const humidity = ref('')
+const weather = ref('')
+const temp = ref('')
+const wind = ref('')
 
-    city : ref(''),
-    humidity : ref(''),
-    weather : ref(''),
-    temp : ref(''),
-    wind : ref('')
-
-    }),
-
-    getters : {
-        fetchWeater : (weatherURL) => {
-            fetch(weatherURL)
-            .then(
-                (response) => {
-                    if (!response.ok){
-                        alert('error fetching')
-                    }
-                    else{
-                        const data = response.json()
-                        humidity.value = data.main.humidity
-                        weather.value = data.weather[0].main
-                        temp.value = data.main.temp
-                        wind.value = data.wind.speed
-                    }
-                }
-            )
+function fetchWeather (weatherURL)  {
+    fetch(weatherURL)
+        .then(
+            (response) => {
+            if (!response.ok){
+                alert('error fetching')
+            }
+        return response.json()
+        })
+        .then(
+            (data)=>{
+            humidity.value = data.main.humidity
+            weather.value = data.weather[0].main
+            temp.value = data.main.temp
+            wind.value = data.wind.speed
+            }
+        )
         }
+    return { humidity, weather, temp, wind, fetchWeather }
     }
-})
-export default weatherStore;
+)

@@ -1,13 +1,13 @@
 <template>
     <div>
-      <div className="card">
+    <div className="card">
 
-      <div className="search">
+    <div className="search">
         <input type="text" v-model="city" placeholder="enter city name " spellCheck="true" />
-        <button @click="checkWeather"> <img src="/src/images/search.png"> </button>
-      </div>
+        <button @click="checkWeather()"> <img src="/src/images/search.png"> </button>
+    </div>
 
-      <div className="weather">
+    <div className="weather">
 
         <img :src="`/src/images/${weather}.png`" class="weather-icon"/>
         
@@ -19,16 +19,16 @@
             <Weatherdetail data ='wind' :info = "wind" symbole = 'kmh' parag ='wind speed'/>
         </div>
 
-      </div>
     </div>
     </div>
-  
+    </div>
+
 </template>
 
 <script setup>
 import { ref } from "vue"
 import Weatherdetail from "./Weatherdetail.vue";
-import {weatherStore} from "./store/weatherStore.js";
+import { UseWeatherStore } from "@/store/weatherStore";
 
     const city = ref('')
     const humidity = ref('')
@@ -36,18 +36,19 @@ import {weatherStore} from "./store/weatherStore.js";
     const temp = ref('')
     const wind = ref('')
 
-    async function checkWeather (){
+    const weatherStore = UseWeatherStore()
+
+    function checkWeather () {
 
         const apiKey = "ecd160b9905d4ae007f35a7c0015e5e2"
         const apiUrl =" https://api.openweathermap.org/data/2.5/weather?&units=metric"
 
-        weatherStore.fetchWeater(apiUrl +  `&q=${city}` +`&appid=${apiKey}`)
-
-        city.value = weatherStore.city
-        humidity.value = weatherStore.humidity
-        weather.value = weatherStore.weather
-        temp.value = weatherStore.temp
-        wind.value = weatherStore.wind
+        weatherStore.fetchWeather(`${apiUrl}&q=${city.value}&appid=${apiKey}`)
+            
+                humidity.value = weatherStore.humidity;
+                weather.value = weatherStore.weather;
+                temp.value = weatherStore.temp;
+                wind.value = weatherStore.wind;
     }
     
 </script>
